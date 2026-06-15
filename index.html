@@ -141,6 +141,20 @@
   .text-content ul, .text-content ol { margin-bottom: 16px; padding-left: 20px; }
   .text-content li { margin-bottom: 10px; }
   .hero-tag { font-size: 9px; margin-bottom: 16px; }
+  .about-intro-grid {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    margin-bottom: 28px !important;
+  }
+  .about-blueprint-panel {
+    position: relative !important;
+    top: auto !important;
+  }
+  .about-blueprint-panel img {
+    max-height: 360px;
+    object-fit: contain;
+    background: rgba(3, 5, 10, 0.75);
+  }
   
   /* Form responsive */
   .hero-ctas form { gap: 10px !important; }
@@ -165,6 +179,13 @@
   .text-content ul, .text-content ol { margin-bottom: 14px; padding-left: 18px; }
   .text-content li { margin-bottom: 8px; }
   .hero-tag { font-size: 8px; margin-bottom: 12px; }
+  .about-intro-grid {
+    gap: 20px !important;
+    margin-bottom: 20px !important;
+  }
+  .about-blueprint-panel img {
+    max-height: 260px;
+  }
   
   /* Form mobile */
   .hero-ctas { flexDirection: 'column' !important; }
@@ -421,7 +442,7 @@ function LandingPage() {
               <div className="shell">
                 <div className="section-label">ABOUT</div>
                 <h2 className="section-title">Synthetic Executive Intelligence</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'start', marginBottom: '40px' }}>
+                <div className="about-intro-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'start', marginBottom: '40px' }}>
                   <div className="text-content" style={{ fontSize: '17px', lineHeight: '1.9' }}>
                     <p>
                       Metallic.V1 is a Cognition-Grade Strategic Intelligence Operating System designed to function as a synthetic executive layer for founders, operators, agencies, and enterprises.
@@ -430,7 +451,7 @@ function LandingPage() {
                       Unlike traditional AI platforms that simply respond to prompts, Metallic.V1 is engineered to think across objectives, architect systems, orchestrate execution, and continuously optimize outcomes. It operates as a private intelligence infrastructure that transforms goals into coordinated action through advanced reasoning, persistent memory, specialized agents, autonomous workflows, and adaptive optimization.
                     </p>
                   </div>
-                  <div style={{ position: 'sticky', top: '100px' }}>
+                  <div className="about-blueprint-panel" style={{ position: 'sticky', top: '100px' }}>
                     <img src="assets/mvi-blueprint.png" alt="MV1 Blueprint" style={{ width: '100%', borderRadius: 'var(--r-xl)', boxShadow: '0 20px 60px rgba(16,185,129,0.15)' }} />
                   </div>
                 </div>
