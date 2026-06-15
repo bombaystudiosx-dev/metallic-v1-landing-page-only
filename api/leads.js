@@ -1,5 +1,5 @@
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
-const LEADS_TO_EMAIL = process.env.LEADS_TO_EMAIL || 'privacy@metallic.v1';
+const LEADS_TO_EMAIL = process.env.LEADS_TO_EMAIL || 'internetkartel@icloud.com';
 const RESEND_FROM = process.env.RESEND_FROM || 'Metallic.V1 <onboarding@resend.dev>';
 
 function json(response, status, body) {
