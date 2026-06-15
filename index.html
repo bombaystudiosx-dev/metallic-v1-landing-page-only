@@ -399,12 +399,28 @@
 
 
 
-const { useState } = React;
+const { useState, useEffect } = React;
 
 function LandingPage() {
   const initialSection = new URLSearchParams(window.location.search).get('section') || 'home';
   const [activeSection, setActiveSection] = useState(initialSection);
   const [formStatus, setFormStatus] = useState({});
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveSection(new URLSearchParams(window.location.search).get('section') || 'home');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  function navigateSection(section) {
+    setActiveSection(section);
+    const nextUrl = section === 'home' ? 'index.html' : `index.html?section=${section}`;
+    window.history.pushState({}, '', nextUrl);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   async function submitLead(event, type) {
     event.preventDefault();
@@ -453,7 +469,7 @@ function LandingPage() {
             {navLinks.map((link) =>
             <button
               key={link.id}
-              onClick={() => setActiveSection(link.id)}
+              onClick={() => navigateSection(link.id)}
               style={{
                 background: 'none',
                 border: 'none',
@@ -612,8 +628,8 @@ function LandingPage() {
                     </div>
 
                     <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                      <button style={{ padding: '14px 32px', background: 'linear-gradient(180deg, #0f9060 0%, #0a7048 100%)', border: '1px solid var(--em)', borderRadius: 'var(--r-md)', color: '#fff', fontSize: '14px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.15s', textTransform: 'uppercase', letterSpacing: '0.05em' }} onMouseEnter={(e) => e.target.style.boxShadow = '0 8px 40px -4px rgba(16,185,129,0.8)'} onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
-                        Coming Soon
+                      <button type="button" style={{ padding: '14px 32px', background: 'linear-gradient(180deg, #0f9060 0%, #0a7048 100%)', border: '1px solid var(--em)', borderRadius: 'var(--r-md)', color: '#fff', fontSize: '14px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.15s', textTransform: 'uppercase', letterSpacing: '0.05em' }} onClick={() => navigateSection('contact')} onMouseEnter={(e) => e.target.style.boxShadow = '0 8px 40px -4px rgba(16,185,129,0.8)'} onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
+                        Request Access
                       </button>
                     </div>
                   </div>

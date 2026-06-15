@@ -772,7 +772,7 @@ section { position:relative; }
     object-fit: contain !important;
     object-position: center center !important;
   }
-  .advisor-mobile-caption {
+.advisor-mobile-caption {
     position: static !important;
     margin-top: 14px !important;
     padding: 0 16px !important;
@@ -815,5 +815,51 @@ section { position:relative; }
   .foot-bottom {
     justify-content: center;
     text-align: center;
+  }
+}
+
+.advisor-nav-button {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(52, 211, 153, 0.22);
+  background: rgba(9, 14, 24, 0.72);
+  color: var(--text);
+  font-size: 28px;
+  line-height: 1;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.advisor-nav-button:hover,
+.advisor-nav-button:focus-visible {
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(10, 34, 24, 0.84);
+  color: var(--em-bright);
+  outline: none;
+}
+
+.advisor-nav-button:active {
+  transform: scale(0.96);
+}
+
+.advisor-mobile-stage:focus-visible,
+[aria-label="Advisor carousel"]:focus-visible {
+  outline: 1px solid rgba(52, 211, 153, 0.55);
+  outline-offset: 6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .advisor-nav-button,
+  .advisor-mobile-card {
+    transition: none !important;
   }
 }

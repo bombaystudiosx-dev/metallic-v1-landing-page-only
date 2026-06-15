@@ -77,6 +77,15 @@ const ADVISORS = [
 ];
 
 function ExpandedAdvisor({ advisor, onClose }) {
+  useEffect(() => {
+    const onKeyDown = (event) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [onClose]);
+
   return (
     <div
       onClick={onClose}
@@ -163,6 +172,7 @@ function ExpandedAdvisor({ advisor, onClose }) {
 
           <button
             onClick={onClose}
+            aria-label="Close advisor detail"
             style={{
               position: 'absolute',
               top: '20px',
@@ -201,11 +211,13 @@ function AdvisorGallery() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
-  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 640);
-  const [touchStart, setTouchStart] = useState(0);
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 769);
+  const [dragState, setDragState] = useState({ active: false, startX: 0, currentX: 0, startTime: 0 });
+  const [wasDragged, setWasDragged] = useState(false);
+  const gestureRef = useRef({ active: false, startX: 0, currentX: 0, startTime: 0 });
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    const handleResize = () => setIsMobile(window.innerWidth < 769);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -217,16 +229,108 @@ function AdvisorGallery() {
     setTimeout(() => setIsAnimating(false), 650);
   };
 
-  const handleTouchStart = (e) => {
-    setTouchStart(e.touches[0].clientX);
+  const dragOffset = dragState.active ? dragState.currentX - dragState.startX : 0;
+  const swipeHint = Math.max(-96, Math.min(96, dragOffset));
+
+  const beginGesture = (x) => {
+    const next = {
+      active: true,
+      startX: x,
+      currentX: x,
+      startTime: performance.now(),
+    };
+    gestureRef.current = next;
+    setWasDragged(false);
+    setDragState(next);
   };
 
-  const handleTouchEnd = (e) => {
-    const touchEnd = e.changedTouches[0].clientX;
-    const diff = touchStart - touchEnd;
-    if (Math.abs(diff) > 50) {
-      navigate(diff > 0 ? 'next' : 'prev');
+  const updateGesture = (x) => {
+    if (!gestureRef.current.active) return;
+    const nextOffset = x - gestureRef.current.startX;
+    if (Math.abs(nextOffset) > 6) setWasDragged(true);
+    const next = { ...gestureRef.current, currentX: x };
+    gestureRef.current = next;
+    setDragState(next);
+  };
+
+  const finishGesture = (x) => {
+    const current = gestureRef.current;
+    if (!current.active) return;
+
+    const offset = x - current.startX;
+    const elapsed = Math.max(1, performance.now() - current.startTime);
+    const velocity = offset / elapsed * 1000;
+    const shouldSwipe = Math.abs(offset) > 48 || Math.abs(velocity) > 420;
+
+    gestureRef.current = { active: false, startX: 0, currentX: 0, startTime: 0 };
+    setDragState({ active: false, startX: 0, currentX: 0, startTime: 0 });
+
+    if (shouldSwipe) {
+      navigate(offset < 0 ? 'next' : 'prev');
+      window.setTimeout(() => setWasDragged(false), 120);
+    } else {
+      window.setTimeout(() => setWasDragged(false), 0);
     }
+  };
+
+  const handlePointerDown = (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    beginGesture(event.clientX);
+    event.currentTarget.setPointerCapture?.(event.pointerId);
+  };
+
+  const handlePointerMove = (event) => {
+    updateGesture(event.clientX);
+  };
+
+  const finishPointerGesture = (event) => {
+    finishGesture(event.clientX);
+    event.currentTarget.releasePointerCapture?.(event.pointerId);
+  };
+
+  const handleMouseDown = (event) => {
+    if (event.button !== 0) return;
+    beginGesture(event.clientX);
+  };
+
+  const handleMouseMove = (event) => {
+    updateGesture(event.clientX);
+  };
+
+  const handleMouseUp = (event) => {
+    finishGesture(event.clientX);
+  };
+
+  const handleTouchStart = (event) => {
+    beginGesture(event.touches[0].clientX);
+  };
+
+  const handleTouchMove = (event) => {
+    updateGesture(event.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (event) => {
+    finishGesture(event.changedTouches[0].clientX);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      navigate('prev');
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      navigate('next');
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      setExpandedId(ADVISORS[activeIndex].id);
+    }
+  };
+
+  const openActiveAdvisor = () => {
+    if (wasDragged) return;
+    setExpandedId(ADVISORS[activeIndex].id);
   };
 
   const getRole = (index) => {
@@ -323,6 +427,21 @@ function AdvisorGallery() {
 
           <div
             className="advisor-mobile-stage"
+            role="region"
+            aria-label="Advisor carousel"
+            tabIndex="0"
+            onKeyDown={handleKeyDown}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={finishPointerGesture}
+            onPointerCancel={finishPointerGesture}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
             style={{
               position: 'relative',
               height: 'auto',
@@ -331,11 +450,12 @@ function AdvisorGallery() {
               justifyContent: 'center',
               cursor: 'pointer',
               userSelect: 'none',
+              touchAction: 'pan-y',
             }}
           >
             <div
               className="advisor-mobile-card"
-              onClick={() => setExpandedId(ADVISORS[activeIndex].id)}
+              onClick={openActiveAdvisor}
               style={{
                 position: 'relative',
                 zIndex: 10,
@@ -343,6 +463,9 @@ function AdvisorGallery() {
                 maxWidth: '100vw',
                 height: 'auto',
                 cursor: 'pointer',
+                transform: `translateX(${swipeHint * 0.28}px) rotate(${swipeHint * 0.018}deg)`,
+                transition: dragState.active ? 'none' : 'transform 260ms cubic-bezier(0.22,1,0.36,1)',
+                willChange: 'transform',
               }}
             >
               <div
@@ -404,10 +527,19 @@ function AdvisorGallery() {
             gap: '8px',
             marginTop: '16px',
           }}>
+            <button
+              className="advisor-nav-button"
+              onClick={() => navigate('prev')}
+              aria-label="Previous advisor"
+            >
+              ‹
+            </button>
             {ADVISORS.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setActiveIndex(i)}
+                aria-label={`Show ${ADVISORS[i].name}`}
+                aria-current={i === activeIndex ? 'true' : undefined}
                 style={{
                   width: i === activeIndex ? '24px' : '8px',
                   height: '8px',
@@ -419,6 +551,13 @@ function AdvisorGallery() {
                 }}
               />
             ))}
+            <button
+              className="advisor-nav-button"
+              onClick={() => navigate('next')}
+              aria-label="Next advisor"
+            >
+              ›
+            </button>
           </div>
 
           <p style={{
@@ -427,7 +566,7 @@ function AdvisorGallery() {
             textAlign: 'center',
             marginTop: '16px',
           }}>
-            Tap dots to explore · Click card to expand
+            Swipe, use arrows, or tap to expand
           </p>
         </div>
 
@@ -474,7 +613,20 @@ function AdvisorGallery() {
           cursor: 'grab',
           userSelect: 'none',
         }}
+        role="region"
+        aria-label="Advisor carousel"
+        tabIndex="0"
+        onKeyDown={handleKeyDown}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={finishPointerGesture}
+        onPointerCancel={finishPointerGesture}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
         onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}>
           {ADVISORS.map((advisor, index) => {
             const role = getRole(index);
@@ -482,12 +634,16 @@ function AdvisorGallery() {
             return (
               <div
                 key={advisor.id}
-                onClick={() => role === 'center' && setExpandedId(advisor.id)}
+                onClick={() => role === 'center' && openActiveAdvisor()}
                 style={{
                   position: 'absolute',
                   aspectRatio: '1 / 1',
                   cursor: role === 'center' ? 'pointer' : 'default',
                   ...styles,
+                  ...(role === 'center' ? {
+                    transform: `${styles.transform} translateX(${swipeHint * 0.2}px) rotate(${swipeHint * 0.012}deg)`,
+                    transition: dragState.active ? 'none' : styles.transition,
+                  } : {}),
                 }}
               >
                 <div
@@ -523,10 +679,19 @@ function AdvisorGallery() {
           gap: '8px',
           marginBottom: '40px',
         }}>
+          <button
+            className="advisor-nav-button"
+            onClick={() => navigate('prev')}
+            aria-label="Previous advisor"
+          >
+            ‹
+          </button>
           {ADVISORS.map((_, i) => (
             <button
               key={i}
               onClick={() => setActiveIndex(i)}
+              aria-label={`Show ${ADVISORS[i].name}`}
+              aria-current={i === activeIndex ? 'true' : undefined}
               style={{
                 width: i === activeIndex ? '24px' : '8px',
                 height: '8px',
@@ -538,6 +703,13 @@ function AdvisorGallery() {
               }}
             />
           ))}
+          <button
+            className="advisor-nav-button"
+            onClick={() => navigate('next')}
+            aria-label="Next advisor"
+          >
+            ›
+          </button>
         </div>
 
         <p style={{
@@ -545,7 +717,7 @@ function AdvisorGallery() {
           color: 'var(--text-mute)',
           textAlign: 'center',
         }}>
-          Swipe or tap dots to explore · Click center card to expand
+          Swipe, use arrows, or tap dots to explore · Click center card to expand
         </p>
       </div>
 
