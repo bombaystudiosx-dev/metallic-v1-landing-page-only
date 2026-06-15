@@ -1,0 +1,9 @@
+{
+  "name": "metallic-v1-landing-page-only",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "node -e \"console.log('Static site: no build step required')\"",
+    "start": "vercel dev"
+  }
+}

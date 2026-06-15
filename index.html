@@ -191,6 +191,34 @@ const { useState } = React;
 function LandingPage() {
   const initialSection = new URLSearchParams(window.location.search).get('section') || 'home';
   const [activeSection, setActiveSection] = useState(initialSection);
+  const [formStatus, setFormStatus] = useState({});
+
+  async function submitLead(event, type) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const payload = Object.fromEntries(formData.entries());
+
+    setFormStatus((current) => ({ ...current, [type]: 'sending' }));
+
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, ...payload })
+      });
+
+      if (!response.ok) {
+        const result = await response.json().catch(() => ({}));
+        throw new Error(result.error || 'Unable to submit right now.');
+      }
+
+      form.reset();
+      setFormStatus((current) => ({ ...current, [type]: 'sent' }));
+    } catch (error) {
+      setFormStatus((current) => ({ ...current, [type]: 'error' }));
+    }
+  }
 
   const navLinks = [
   { id: 'home', label: 'Home' },
@@ -264,17 +292,14 @@ function LandingPage() {
                   AI Agent Platform for Founders, Operators, and Enterprises. Ship custom intelligence in minutes.
                 </p>
                 <div className="hero-ctas" style={{ flexDirection: 'column', alignItems: 'flex-start', maxWidth: '420px', gap: '20px' }}>
-                  <form onSubmit={(e) => {
-                  e.preventDefault();
-                  alert('Thank you for joining the waitlist! Check your email for updates.');
-                  e.target.reset();
-                }} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <form onSubmit={(e) => submitLead(e, 'waitlist')} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
                     <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       Join the Waitlist
                     </label>
                     <div style={{ display: 'flex', gap: '8px' }}>
                       <input
                       type="email"
+                      name="email"
                       required
                       placeholder="Enter your email"
                       style={{
@@ -294,6 +319,7 @@ function LandingPage() {
                     
                       <button
                       type="submit"
+                      disabled={formStatus.waitlist === 'sending'}
                       style={{
                         padding: '14px 32px',
                         background: 'linear-gradient(180deg, #0f9060 0%, #0a7048 100%)',
@@ -313,11 +339,11 @@ function LandingPage() {
                       onMouseEnter={(e) => e.target.style.boxShadow = '0 8px 40px -4px rgba(16,185,129,0.8)'}
                       onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
                       
-                        Join Now
+                        {formStatus.waitlist === 'sending' ? 'Sending...' : 'Join Now'}
                       </button>
                     </div>
                     <p style={{ fontSize: '12px', color: 'var(--text-mute)', margin: '0' }}>
-                      Be first to access Synthetic Executive Intelligence
+                      {formStatus.waitlist === 'sent' ? 'You are on the waitlist.' : formStatus.waitlist === 'error' ? 'Submission failed. Try again in a moment.' : 'Be first to access Synthetic Executive Intelligence'}
                     </p>
                   </form>
                 </div>
@@ -467,16 +493,13 @@ function LandingPage() {
             <div className="shell" style={{ maxWidth: '600px' }}>
               <div className="section-label">GET IN TOUCH</div>
               <h2 className="section-title">Contact Us</h2>
-              <form onSubmit={(e) => {
-              e.preventDefault();
-              alert('Thank you for your submission. We will be in touch shortly.');
-              e.target.reset();
-            }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <form onSubmit={(e) => submitLead(e, 'contact')} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name *</label>
                   <input
                   type="text"
+                  name="name"
                   required
                   placeholder="Your name"
                   style={{
@@ -500,6 +523,7 @@ function LandingPage() {
                   <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email *</label>
                   <input
                   type="email"
+                  name="email"
                   required
                   placeholder="your@email.com"
                   style={{
@@ -523,6 +547,7 @@ function LandingPage() {
                   <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Company</label>
                   <input
                   type="text"
+                  name="company"
                   placeholder="Your company name"
                   style={{
                     padding: '12px 16px',
@@ -544,6 +569,7 @@ function LandingPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Interest *</label>
                   <select
+                  name="interest"
                   required
                   style={{
                     padding: '12px 16px',
@@ -572,6 +598,7 @@ function LandingPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message *</label>
                   <textarea
+                  name="message"
                   required
                   placeholder="Tell us more about your inquiry..."
                   rows="6"
@@ -596,6 +623,7 @@ function LandingPage() {
 
                 <button
                 type="submit"
+                disabled={formStatus.contact === 'sending'}
                 style={{
                   marginTop: '20px',
                   padding: '14px 28px',
@@ -614,11 +642,11 @@ function LandingPage() {
                 onMouseEnter={(e) => e.target.style.boxShadow = '0 6px 32px -4px rgba(16,185,129,0.7)'}
                 onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
                 
-                  Send Message
+                  {formStatus.contact === 'sending' ? 'Sending...' : 'Send Message'}
                 </button>
 
                 <p style={{ fontSize: '12px', color: 'var(--text-mute)', marginTop: '12px', marginBottom: '0' }}>
-                  We typically respond within 24 hours during business days.
+                  {formStatus.contact === 'sent' ? 'Message sent. We will be in touch shortly.' : formStatus.contact === 'error' ? 'Submission failed. Try again in a moment.' : 'We typically respond within 24 hours during business days.'}
                 </p>
               </form>
             </div>
