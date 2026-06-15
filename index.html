@@ -451,10 +451,10 @@ function LandingPage() {
         <>
             <div className="hero-wrap">
               <div className="hero-video-bg">
-                <video className="hero-video-desktop" autoPlay loop muted playsInline preload="metadata">
+                <video className="hero-video-desktop" autoPlay loop muted playsInline preload="metadata" onCanPlay={(e) => { e.currentTarget.muted = true; e.currentTarget.play().catch(() => {}); }}>
                   <source src="assets/hero.mp4" type="video/mp4" />
                 </video>
-                <video className="hero-video-mobile" autoPlay loop muted playsInline preload="metadata">
+                <video className="hero-video-mobile" autoPlay loop muted playsInline preload="metadata" onCanPlay={(e) => { e.currentTarget.muted = true; e.currentTarget.play().catch(() => {}); }}>
                   <source src="assets/hero-mobile.mp4" type="video/mp4" />
                 </video>
               </div>
