@@ -57,6 +57,7 @@
   width:auto; height:auto;
   transform:translate(-50%,-50%);
   object-fit:cover;
+  object-position:center center;
 }
 .hero-overlay {
   position:absolute; inset:0; z-index:1; pointer-events:none;
@@ -127,11 +128,46 @@
 }
 
 @media (max-width:768px) {
-  .shell { padding: 0 20px; }
+  html, body, #root, .page, section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .shell { padding: 0 16px; }
+  .hero-wrap {
+    min-height: 100svh;
+    justify-content: center;
+    align-items: center;
+  }
   .hero-inner { padding: 40px 20px 0; }
+  .hero-inner {
+    min-height: calc(100svh - var(--nav-h));
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 96px 16px 48px;
+  }
   .hero-h1 { font-size: 32px; margin-bottom: 20px; line-height: 1; }
-  .hero-sub { font-size: 14px; margin-bottom: 24px; }
-  .hero-ctas { margin-bottom: 48px; gap: 16px; }
+  .hero-sub { font-size: 14px; margin: 0 auto 24px; max-width: 100%; }
+  .hero-tag { justify-content: center; }
+  .hero-ctas {
+    width: 100%;
+    max-width: calc(100vw - 32px) !important;
+    align-items: center !important;
+    margin: 0 auto 48px;
+    gap: 16px;
+  }
+  .hero-ctas form {
+    max-width: 100%;
+    align-items: center;
+  }
+  .hero-ctas form > div {
+    width: 100%;
+    max-width: 100%;
+  }
   .page-section { padding: 48px 0; }
   .section-title { font-size: 28px; margin-bottom: 32px; }
   .section-label { font-size: 9px; margin-bottom: 16px; }
@@ -155,6 +191,35 @@
     object-fit: contain;
     background: rgba(3, 5, 10, 0.75);
   }
+  .products-list {
+    gap: 48px !important;
+    margin-bottom: 32px !important;
+  }
+  .product-row {
+    grid-template-columns: 1fr !important;
+    gap: 28px !important;
+    direction: ltr !important;
+    text-align: center;
+    width: 100%;
+    max-width: 100%;
+  }
+  .product-row > div {
+    width: 100%;
+    max-width: 100%;
+  }
+  .product-features {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .product-media {
+    max-height: 340px !important;
+    width: 100% !important;
+  }
+  .product-media img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
   
   /* Form responsive */
   .hero-ctas form { gap: 10px !important; }
@@ -167,6 +232,7 @@
 @media (max-width:480px) {
   .shell { padding: 0 16px; }
   .hero-inner { padding: 32px 16px 0; }
+  .hero-inner { padding: 92px 16px 44px; }
   .hero-h1 { font-size: 24px; margin-bottom: 16px; }
   .hero-sub { font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
   .hero-ctas { margin-bottom: 40px; }
@@ -386,14 +452,14 @@ function LandingPage() {
               Four specialized systems built for founders, operators, and enterprises who demand precision, control, and measurable impact.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '80px', marginBottom: '60px' }}>
+            <div className="products-list" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '80px', marginBottom: '60px' }}>
               {[
               { id: 'metallic', name: 'Metallic.V1', subtitle: 'Elite Cognitive Builder', tag: 'Private Build', image: 'assets/product-metallic.png', description: 'Private cognitive intelligence platform. Design, build, deploy, and scale custom AI agents and advanced applications in one unified intelligence platform.', features: ['Build Intelligence', 'Automate Workflows', 'Scale Operations', 'Private & Secure'], reverse: false },
               { id: 'fluentbridge', name: 'FluentBridge', subtitle: 'Language Learning Platform', tag: 'Education', image: 'assets/product-fluentbridge.png', description: 'Learn English. Speak with Confidence. Interactive language learning with AI-powered conversation practice, progress tracking, and personalized curriculum.', features: ['AI Conversations', 'Real-time Feedback', 'Progress Tracking', 'Multilingual Support'], reverse: true },
               { id: 'zouk', name: 'Zouk', subtitle: 'Skills & Agents System', tag: 'Workflow Automation', image: 'assets/product-zouk.png', description: 'AI workflow operating system. 200+ active skills, 60+ specialized agents, and 150+ customizable workflows. Automate complexity and drive outcomes with precision.', features: ['Skill Library', 'Agent Network', 'Workflow Builder', 'Execution Engine'], reverse: false },
               { id: 'naughtypilot', name: 'Naughty Pilot', subtitle: 'Adult Traffic Software', tag: 'Monetization', image: 'assets/product-naughtypilot.png', description: 'Premium adult-growth infrastructure. Advanced targeting, high-converting campaigns, and real-time analytics. More traffic, more leads, more revenue.', features: ['Traffic Generation', 'High-Converting Funnels', 'Precise Targeting', 'Maximized ROI'], reverse: true }].
               map((product) =>
-              <div key={product.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center', ...(product.reverse && { direction: 'rtl' }) }}>
+              <div className="product-row" key={product.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center', ...(product.reverse && { direction: 'rtl' }) }}>
                   <div style={{ direction: 'ltr' }}>
                     <div style={{ fontSize: '11px', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--em-bright)', marginBottom: '16px', display: 'inline-block' }}>
                       {product.tag}
@@ -408,7 +474,7 @@ function LandingPage() {
                       {product.description}
                     </p>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+                    <div className="product-features" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
                       {product.features.map((feature, i) =>
                     <div key={i} style={{ fontSize: '13px', color: 'var(--text-dim)', padding: '12px', background: 'transparent', border: '1px solid rgba(52, 211, 153, 0.15)', borderRadius: 'var(--r-md)', display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{ color: 'var(--em-bright)', fontWeight: '700', fontSize: '14px' }}>✓</span> {feature}
@@ -424,7 +490,7 @@ function LandingPage() {
                   </div>
 
                   <div style={{ direction: 'ltr' }}>
-                    <div style={{ width: '100%', height: 'auto', maxHeight: '600px', borderRadius: 'var(--r-xl)', border: '1px solid rgba(52, 211, 153, 0.15)', overflow: 'hidden', boxShadow: '0 20px 60px rgba(16,185,129,0.15)' }}>
+                    <div className="product-media" style={{ width: '100%', height: 'auto', maxHeight: '600px', borderRadius: 'var(--r-xl)', border: '1px solid rgba(52, 211, 153, 0.15)', overflow: 'hidden', boxShadow: '0 20px 60px rgba(16,185,129,0.15)' }}>
                       <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
                     </div>
                   </div>
@@ -948,8 +1014,8 @@ function LandingPage() {
         {/* ── FOOTER WITH LOGO ── */}
         <footer style={{ borderTop: 'none', background: '#000', padding: '80px 0 40px' }}>
           <div className="shell">
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '80px' }}>
-              <img src="assets/mv1-footer-logo.png" alt="Metallic V1" style={{ height: '550px', width: 'auto', objectFit: 'contain' }} />
+            <div className="footer-logo-wrap" style={{ display: 'flex', justifyContent: 'center', marginBottom: '80px' }}>
+              <img className="footer-logo" src="assets/mv1-footer-logo.png" alt="Metallic V1" style={{ height: '550px', width: 'auto', objectFit: 'contain' }} />
             </div>
             <SiteFooter />
           </div>

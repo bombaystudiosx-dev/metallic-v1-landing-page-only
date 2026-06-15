@@ -47,7 +47,13 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-html, body { margin: 0; padding: 0; width: 100%; }
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 body {
   background: var(--bg);
@@ -61,7 +67,7 @@ body {
 
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
-img { display: block; }
+img { display: block; max-width: 100%; height: auto; }
 ::selection { background: #0a3020; color: var(--em-bright); }
 
 /* ── Scrollbar ── */
@@ -700,6 +706,26 @@ section { position:relative; }
   .model-row > :nth-child(4), .model-row > :nth-child(5) { display:none; }
 }
 @media (max-width:768px) {
+  html, body, #root, .page, section {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .shell {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .topnav-inner {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    gap: 12px;
+  }
   .app-page { grid-template-columns:1fr; }
   .app-sidebar { display:none; }
   .nav-links { display:none; }
@@ -707,4 +733,25 @@ section { position:relative; }
   .modes-grid { grid-template-columns:1fr; }
   .kpi-grid { grid-template-columns:1fr 1fr; }
   .footer-grid { grid-template-columns:1fr; }
+  .advisor-mobile-section,
+  .advisor-mobile-stage,
+  .advisor-mobile-card {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .advisor-mobile-stage {
+    height: 430px !important;
+  }
+  .advisor-mobile-card {
+    width: min(100%, 300px) !important;
+    height: min(72vw, 360px) !important;
+  }
+  .footer-logo-wrap {
+    margin-bottom: 40px !important;
+  }
+  .footer-logo {
+    width: min(100%, 320px) !important;
+    height: auto !important;
+  }
 }

@@ -292,7 +292,7 @@ function AdvisorGallery() {
 
   if (isMobile) {
     return (
-      <section style={{ padding: '60px 0', background: '#000' }}>
+      <section className="advisor-mobile-section" style={{ padding: '60px 0', background: '#000' }}>
         <div className="shell">
           <div style={{ textAlign: 'center', marginBottom: '40px' }}>
             <div style={{
@@ -320,6 +320,7 @@ function AdvisorGallery() {
           </div>
 
           <div
+            className="advisor-mobile-stage"
             style={{
               position: 'relative',
               height: '520px',
@@ -331,6 +332,7 @@ function AdvisorGallery() {
             }}
           >
             <div
+              className="advisor-mobile-card"
               onClick={() => setExpandedId(ADVISORS[activeIndex].id)}
               style={{
                 position: 'relative',
