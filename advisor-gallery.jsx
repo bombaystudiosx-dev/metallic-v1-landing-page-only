@@ -93,6 +93,7 @@ function ExpandedAdvisor({ advisor, onClose }) {
       }}
     >
       <div
+        className="advisor-expanded-modal"
         onClick={(e) => e.stopPropagation()}
         style={{
           position: 'relative',
@@ -108,21 +109,22 @@ function ExpandedAdvisor({ advisor, onClose }) {
           gap: '40px',
         }}
       >
-        <div style={{ position: 'sticky', top: 0, height: 'fit-content' }}>
+        <div className="advisor-expanded-image" style={{ position: 'sticky', top: 0, height: 'fit-content' }}>
           <img
             src={advisor.image}
             alt={advisor.name}
             style={{
               width: '100%',
-              height: '100%',
-              objectFit: 'cover',
+              height: 'auto',
+              objectFit: 'contain',
+              objectPosition: 'center center',
               borderRadius: '16px',
               display: 'block',
             }}
           />
         </div>
 
-        <div style={{ padding: '40px 40px 40px 0' }}>
+        <div className="advisor-expanded-content" style={{ padding: '40px 40px 40px 0' }}>
           <div style={{ fontSize: '12px', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--em-bright)', marginBottom: '12px' }}>
             {advisor.number}
           </div>
@@ -292,9 +294,9 @@ function AdvisorGallery() {
 
   if (isMobile) {
     return (
-      <section className="advisor-mobile-section" style={{ padding: '60px 0', background: '#000' }}>
+      <section className="advisor-mobile-section" style={{ padding: '24px 16px', background: '#000' }}>
         <div className="shell">
-          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '24px' }}>
             <div style={{
               fontSize: '10px',
               fontFamily: 'var(--mono)',
@@ -323,7 +325,7 @@ function AdvisorGallery() {
             className="advisor-mobile-stage"
             style={{
               position: 'relative',
-              height: '520px',
+              height: 'auto',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -337,20 +339,20 @@ function AdvisorGallery() {
               style={{
                 position: 'relative',
                 zIndex: 10,
-                width: '85%',
-                maxWidth: '340px',
-                height: '450px',
+                width: '100vw',
+                maxWidth: '100vw',
+                height: 'auto',
                 cursor: 'pointer',
               }}
             >
               <div
                 style={{
                   width: '100%',
-                  height: '100%',
-                  borderRadius: 'var(--r-xl)',
+                  height: 'auto',
+                  borderRadius: 0,
                   overflow: 'hidden',
-                  border: '1px solid rgba(52, 211, 153, 0.3)',
-                  boxShadow: '0 20px 60px rgba(16,185,129,0.2)',
+                  border: 'none',
+                  boxShadow: 'none',
                   transition: 'all 0.3s ease-out',
                 }}
               >
@@ -359,13 +361,15 @@ function AdvisorGallery() {
                   alt={ADVISORS[activeIndex].name}
                   style={{
                     width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    objectPosition: 'center center',
+                    display: 'block',
                   }}
                 />
               </div>
 
-              <div style={{
+              <div className="advisor-mobile-caption" style={{
                 position: 'absolute',
                 bottom: '-70px',
                 left: 0,
@@ -398,7 +402,7 @@ function AdvisorGallery() {
             display: 'flex',
             justifyContent: 'center',
             gap: '8px',
-            marginTop: '90px',
+            marginTop: '16px',
           }}>
             {ADVISORS.map((_, i) => (
               <button
@@ -421,7 +425,7 @@ function AdvisorGallery() {
             fontSize: '12px',
             color: 'var(--text-mute)',
             textAlign: 'center',
-            marginTop: '24px',
+            marginTop: '16px',
           }}>
             Tap dots to explore · Click card to expand
           </p>
