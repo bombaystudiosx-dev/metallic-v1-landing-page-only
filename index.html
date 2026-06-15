@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Metallic.V1 — Landing</title>
+<meta name="description" content="Build, deploy, and orchestrate with AI agents. Your private cognitive layer."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+/* Landing-specific */
+.hero-wrap {
+  position:relative; min-height:100vh; padding-top:var(--nav-h);
+  overflow:hidden; background:#000;
+  display:flex; flex-direction:column;
+}
+.hero-inner {
+  position:relative; z-index:1; width:100%;
+  max-width:var(--shell); margin:0 auto; padding:72px 28px 0;
+}
+.hero-tag {
+  font-family:var(--mono); font-size:10px; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--text-mute); margin-bottom:28px;
+  display:flex; align-items:center; gap:10px;
+}
+.hero-h1 {
+  font-size:clamp(52px,8vw,120px);
+  font-weight:300; letter-spacing:-0.045em; line-height:0.95;
+  background:linear-gradient(175deg,#f2f6fa 0%,#9eb0c0 45%,#3d5568 100%);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  margin-bottom:28px;
+  filter:drop-shadow(0 0 20px rgba(0,0,0,0.6)) drop-shadow(0 2px 15px rgba(0,0,0,0.4));
+  text-shadow: 0 0 30px rgba(0,0,0,0.5), 0 2px 20px rgba(0,0,0,0.3);
+}
+.hero-h1 .em { background:linear-gradient(130deg,#34d399,#10b981); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.hero-sub {
+  font-size:clamp(15px,1.4vw,19px); color:var(--text-dim);
+  max-width:560px; line-height:1.65; margin-bottom:40px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.5), 0 2px 12px rgba(0,0,0,0.3);
+}
+.hero-tag { text-shadow:0 1px 8px rgba(0,0,0,0.9); }
+.hero-ctas { display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:64px; }
+.hero-stat { font-family:var(--mono); font-size:11px; color:var(--text-mute); }
+
+/* VIDEO BACKGROUND */
+.hero-video-bg {
+  position:absolute; inset:0; z-index:0; overflow:hidden;
+}
+.hero-video-bg video {
+  position:absolute; top:50%; left:50%;
+  min-width:100%; min-height:100%;
+  width:auto; height:auto;
+  transform:translate(-50%,-50%);
+  object-fit:cover;
+}
+.hero-overlay {
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 40%, rgba(0,0,0,0.5) 100%);
+}
+
+/* ── Section content ── */
+.page-section {
+  padding: 80px 0;
+  border-bottom: 1px solid var(--border);
+}
+.page-section:last-of-type {
+  border-bottom: none;
+}
+.section-title {
+  font-size: clamp(34px,4.5vw,68px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  background: linear-gradient(175deg, #f0f4f8 0%, #b0bec8 50%, #4a6070 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 48px;
+}
+.section-label {
+  font-family:var(--mono); font-size:10px;
+  text-transform:uppercase; letter-spacing:0.18em;
+  color:var(--text-mute); margin-bottom:28px;
+  display:flex; align-items:center; gap:14px;
+}
+.section-label::before,.section-label::after {
+  content:""; flex:1; height:1px;
+  background: linear-gradient(90deg,transparent,var(--border-2),transparent);
+}
+
+.text-content {
+  max-width: 800px;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--text-dim);
+}
+.text-content h3 {
+  font-size: 24px;
+  color: var(--text);
+  margin: 32px 0 16px;
+  font-weight: 500;
+}
+.text-content p {
+  margin-bottom: 20px;
+}
+.text-content ul, .text-content ol {
+  margin-bottom: 20px;
+  padding-left: 24px;
+}
+.text-content li {
+  margin-bottom: 12px;
+  color: var(--text-dim);
+}
+
+/* ── Responsive ── */
+@media (max-width:1024px) {
+  .shell { padding: 0 32px; }
+  .page-section { padding: 60px 0; }
+  .section-title { font-size: clamp(28px,3.5vw,48px); margin-bottom: 40px; }
+  .hero-h1 { font-size: clamp(40px,6vw,80px); }
+  .hero-sub { font-size: clamp(14px,1.2vw,16px); margin-bottom: 32px; }
+  .hero-inner { padding: 60px 32px 0; }
+}
+
+@media (max-width:768px) {
+  .shell { padding: 0 20px; }
+  .hero-inner { padding: 40px 20px 0; }
+  .hero-h1 { font-size: 32px; margin-bottom: 20px; line-height: 1; }
+  .hero-sub { font-size: 14px; margin-bottom: 24px; }
+  .hero-ctas { margin-bottom: 48px; gap: 16px; }
+  .page-section { padding: 48px 0; }
+  .section-title { font-size: 28px; margin-bottom: 32px; }
+  .section-label { font-size: 9px; margin-bottom: 16px; }
+  .text-content { font-size: 15px; line-height: 1.7; }
+  .text-content h3 { font-size: 18px; margin: 24px 0 12px; }
+  .text-content p { margin-bottom: 16px; }
+  .text-content ul, .text-content ol { margin-bottom: 16px; padding-left: 20px; }
+  .text-content li { margin-bottom: 10px; }
+  .hero-tag { font-size: 9px; margin-bottom: 16px; }
+  
+  /* Form responsive */
+  .hero-ctas form { gap: 10px !important; }
+  .hero-ctas input, .hero-ctas button { font-size: 13px; padding: 12px 14px; }
+  .hero-ctas button { padding: 12px 24px; }
+  .hero-ctas label { font-size: 12px; }
+  .hero-ctas p { font-size: 11px; }
+}
+
+@media (max-width:480px) {
+  .shell { padding: 0 16px; }
+  .hero-inner { padding: 32px 16px 0; }
+  .hero-h1 { font-size: 24px; margin-bottom: 16px; }
+  .hero-sub { font-size: 13px; margin-bottom: 20px; line-height: 1.6; }
+  .hero-ctas { margin-bottom: 40px; }
+  .page-section { padding: 40px 0; }
+  .section-title { font-size: 22px; margin-bottom: 24px; }
+  .section-label { font-size: 8px; margin-bottom: 12px; }
+  .text-content { font-size: 14px; line-height: 1.6; }
+  .text-content h3 { font-size: 16px; margin: 20px 0 10px; }
+  .text-content p { margin-bottom: 14px; }
+  .text-content ul, .text-content ol { margin-bottom: 14px; padding-left: 18px; }
+  .text-content li { margin-bottom: 8px; }
+  .hero-tag { font-size: 8px; margin-bottom: 12px; }
+  
+  /* Form mobile */
+  .hero-ctas { flexDirection: 'column' !important; }
+  .hero-ctas form { gap: 8px !important; }
+  .hero-ctas > div { flex-direction: column !important; width: 100% !important; }
+  .hero-ctas input { width: 100%; font-size: 13px; padding: 11px 12px; }
+  .hero-ctas button { width: 100%; font-size: 12px; padding: 11px 20px; }
+  .hero-ctas label { font-size: 11px; }
+  .hero-ctas p { font-size: 10px; }
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="shared.jsx" data-presets="env,react"></script>
+<script type="text/babel" src="advisor-gallery.jsx" data-presets="env,react"></script>
+<script type="text/babel" data-presets="env,react">
+
+
+
+
+const { useState } = React;
+
+function LandingPage() {
+  const initialSection = new URLSearchParams(window.location.search).get('section') || 'home';
+  const [activeSection, setActiveSection] = useState(initialSection);
+
+  const navLinks = [
+  { id: 'home', label: 'Home' },
+  { id: 'products', label: 'Products' },
+  { id: 'about', label: 'About' },
+  { id: 'contact', label: 'Contact' }];
+
+
+  return (
+    <>
+      {/* Custom nav for landing */}
+      <nav className="topnav" style={{ background: 'rgba(3,5,10,0.95)' }}>
+        <div className="topnav-inner" style={{ height: "60px" }}>
+          <a href="index.html" className="brand" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <img src="assets/mv1-logo.png" alt="Metallic V1" style={{ height: '32px', width: 'auto' }} />
+            <span style={{ display: 'none' }}>METALLIC</span>
+          </a>
+          <div className="nav-links">
+            {navLinks.map((link) =>
+            <button
+              key={link.id}
+              onClick={() => setActiveSection(link.id)}
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '7px 13px',
+                borderRadius: 'var(--r-sm)',
+                fontSize: '13px',
+                cursor: 'pointer',
+                transition: 'all 0.12s',
+                color: activeSection === link.id ? 'var(--em-bright)' : 'var(--text-dim)',
+                ...{
+                  ':hover': {
+                    color: 'var(--text)',
+                    background: 'var(--surface)'
+                  }
+                }
+              }}>
+              
+                {link.label}
+              </button>
+            )}
+          </div>
+          <div className="nav-right">
+            <span className="nav-pill"><span className="dot" style={{ backgroundColor: "rgb(255, 84, 142)" }} />Live</span>
+          </div>
+        </div>
+      </nav>
+
+      <div className="page">
+        {/* ── HOME ── */}
+        {activeSection === 'home' &&
+        <>
+            <div className="hero-wrap">
+              <div className="hero-video-bg">
+                <video autoPlay loop muted playsInline>
+                  <source src="assets/hero.mp4" type="video/mp4" />
+                </video>
+              </div>
+              <div className="hero-overlay" />
+              <div className="hero-inner" style={{ position: "relative", zIndex: 2 }}>
+                <div className="hero-tag">
+                  <span className="live-dot" />
+                  METALLIC.V1 · LIVE
+                </div>
+                <h1 className="hero-h1">
+                  Synthetic Executive<br />
+                  Intelligence
+                </h1>
+                <p className="hero-sub">
+                  AI Agent Platform for Founders, Operators, and Enterprises. Ship custom intelligence in minutes.
+                </p>
+                <div className="hero-ctas" style={{ flexDirection: 'column', alignItems: 'flex-start', maxWidth: '420px', gap: '20px' }}>
+                  <form onSubmit={(e) => {
+                  e.preventDefault();
+                  alert('Thank you for joining the waitlist! Check your email for updates.');
+                  e.target.reset();
+                }} style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                    <label style={{ fontSize: '13px', fontWeight: '600', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Join the Waitlist
+                    </label>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input
+                      type="email"
+                      required
+                      placeholder="Enter your email"
+                      style={{
+                        flex: 1,
+                        padding: '14px 16px',
+                        background: 'var(--surface-2)',
+                        border: '1px solid var(--border)',
+                        borderRadius: 'var(--r-md)',
+                        color: 'var(--text)',
+                        fontFamily: 'inherit',
+                        fontSize: '14px',
+                        outline: 'none',
+                        transition: 'all 0.15s'
+                      }}
+                      onFocus={(e) => e.target.style.borderColor = 'rgba(52,211,153,0.45)'}
+                      onBlur={(e) => e.target.style.borderColor = 'var(--border)'} />
+                    
+                      <button
+                      type="submit"
+                      style={{
+                        padding: '14px 32px',
+                        background: 'linear-gradient(180deg, #0f9060 0%, #0a7048 100%)',
+                        border: '1px solid var(--em)',
+                        borderRadius: 'var(--r-md)',
+                        color: '#fff',
+                        fontFamily: 'inherit',
+                        fontSize: '14px',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        whiteSpace: 'nowrap',
+                        boxShadow: '0 4px 24px -6px rgba(16,185,129,0.5)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.05em'
+                      }}
+                      onMouseEnter={(e) => e.target.style.boxShadow = '0 8px 40px -4px rgba(16,185,129,0.8)'}
+                      onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
+                      
+                        Join Now
+                      </button>
+                    </div>
+                    <p style={{ fontSize: '12px', color: 'var(--text-mute)', margin: '0' }}>
+                      Be first to access Synthetic Executive Intelligence
+                    </p>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            {/* Advisor Gallery */}
+            <AdvisorGallery />
+          </>
+        }
+
+        {/* ── PRODUCTS ── */}
+        {activeSection === 'products' &&
+        <section className="page-section" style={{ paddingTop: '80px', paddingBottom: '80px' }}>
+          <div className="shell">
+            <div className="section-label">PRODUCTS</div>
+            <h2 className="section-title">Enterprise AI Platforms</h2>
+            <p className="text-content" style={{ maxWidth: '700px', marginBottom: '80px' }}>
+              Four specialized systems built for founders, operators, and enterprises who demand precision, control, and measurable impact.
+            </p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '80px', marginBottom: '60px' }}>
+              {[
+              { id: 'metallic', name: 'Metallic.V1', subtitle: 'Elite Cognitive Builder', tag: 'Private Build', image: 'assets/product-metallic.png', description: 'Private cognitive intelligence platform. Design, build, deploy, and scale custom AI agents and advanced applications in one unified intelligence platform.', features: ['Build Intelligence', 'Automate Workflows', 'Scale Operations', 'Private & Secure'], reverse: false },
+              { id: 'fluentbridge', name: 'FluentBridge', subtitle: 'Language Learning Platform', tag: 'Education', image: 'assets/product-fluentbridge.png', description: 'Learn English. Speak with Confidence. Interactive language learning with AI-powered conversation practice, progress tracking, and personalized curriculum.', features: ['AI Conversations', 'Real-time Feedback', 'Progress Tracking', 'Multilingual Support'], reverse: true },
+              { id: 'zouk', name: 'Zouk', subtitle: 'Skills & Agents System', tag: 'Workflow Automation', image: 'assets/product-zouk.png', description: 'AI workflow operating system. 200+ active skills, 60+ specialized agents, and 150+ customizable workflows. Automate complexity and drive outcomes with precision.', features: ['Skill Library', 'Agent Network', 'Workflow Builder', 'Execution Engine'], reverse: false },
+              { id: 'naughtypilot', name: 'Naughty Pilot', subtitle: 'Adult Traffic Software', tag: 'Monetization', image: 'assets/product-naughtypilot.png', description: 'Premium adult-growth infrastructure. Advanced targeting, high-converting campaigns, and real-time analytics. More traffic, more leads, more revenue.', features: ['Traffic Generation', 'High-Converting Funnels', 'Precise Targeting', 'Maximized ROI'], reverse: true }].
+              map((product) =>
+              <div key={product.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center', ...(product.reverse && { direction: 'rtl' }) }}>
+                  <div style={{ direction: 'ltr' }}>
+                    <div style={{ fontSize: '11px', fontFamily: 'var(--mono)', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--em-bright)', marginBottom: '16px', display: 'inline-block' }}>
+                      {product.tag}
+                    </div>
+                    <h3 style={{ fontSize: 'clamp(28px, 3vw, 48px)', fontWeight: '400', letterSpacing: '-0.02em', background: 'linear-gradient(175deg, #f0f4f8 0%, #b0bec8 50%, #4a6070 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '20px' }}>
+                      {product.name}
+                    </h3>
+                    <p style={{ fontSize: '14px', color: 'var(--em-bright)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '16px' }}>
+                      {product.subtitle}
+                    </p>
+                    <p style={{ fontSize: '15px', color: 'var(--text-dim)', lineHeight: '1.7', marginBottom: '28px', maxWidth: '500px' }}>
+                      {product.description}
+                    </p>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '32px' }}>
+                      {product.features.map((feature, i) =>
+                    <div key={i} style={{ fontSize: '13px', color: 'var(--text-dim)', padding: '12px', background: 'transparent', border: '1px solid rgba(52, 211, 153, 0.15)', borderRadius: 'var(--r-md)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <span style={{ color: 'var(--em-bright)', fontWeight: '700', fontSize: '14px' }}>✓</span> {feature}
+                        </div>
+                    )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                      <button style={{ padding: '14px 32px', background: 'linear-gradient(180deg, #0f9060 0%, #0a7048 100%)', border: '1px solid var(--em)', borderRadius: 'var(--r-md)', color: '#fff', fontSize: '14px', fontWeight: '700', cursor: 'pointer', transition: 'all 0.15s', textTransform: 'uppercase', letterSpacing: '0.05em' }} onMouseEnter={(e) => e.target.style.boxShadow = '0 8px 40px -4px rgba(16,185,129,0.8)'} onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
+                        Coming Soon
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ direction: 'ltr' }}>
+                    <div style={{ width: '100%', height: 'auto', maxHeight: '600px', borderRadius: 'var(--r-xl)', border: '1px solid rgba(52, 211, 153, 0.15)', overflow: 'hidden', boxShadow: '0 20px 60px rgba(16,185,129,0.15)' }}>
+                      <img src={product.image} alt={product.name} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+        }
+
+        {/* ── ABOUT ── */}
+        {activeSection === 'about' &&
+        <>
+            <section className="page-section" style={{ paddingTop: '80px', paddingBottom: '60px' }}>
+              <div className="shell">
+                <div className="section-label">ABOUT</div>
+                <h2 className="section-title">Synthetic Executive Intelligence</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '48px', alignItems: 'start', marginBottom: '40px' }}>
+                  <div className="text-content" style={{ fontSize: '17px', lineHeight: '1.9' }}>
+                    <p>
+                      Metallic.V1 is a Cognition-Grade Strategic Intelligence Operating System designed to function as a synthetic executive layer for founders, operators, agencies, and enterprises.
+                    </p>
+                    <p>
+                      Unlike traditional AI platforms that simply respond to prompts, Metallic.V1 is engineered to think across objectives, architect systems, orchestrate execution, and continuously optimize outcomes. It operates as a private intelligence infrastructure that transforms goals into coordinated action through advanced reasoning, persistent memory, specialized agents, autonomous workflows, and adaptive optimization.
+                    </p>
+                  </div>
+                  <div style={{ position: 'sticky', top: '100px' }}>
+                    <img src="assets/about-hero.png" alt="Metallic.V1 Interface" style={{ width: '100%', borderRadius: 'var(--r-xl)', boxShadow: '0 20px 60px rgba(16,185,129,0.15)' }} />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section style={{ paddingTop: '60px', paddingBottom: '60px', background: 'linear-gradient(180deg, rgba(16,185,129,0.05) 0%, transparent 100%)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+              <div className="shell">
+                <div className="text-content" style={{ fontSize: '17px', lineHeight: '1.9', maxWidth: '900px' }}>
+                  <h3 style={{ fontSize: '24px', marginTop: '0' }}>The Problem We Solve</h3>
+                  <p>
+                    At its core, Metallic.V1 was built around a simple belief: businesses do not suffer from a lack of information—they suffer from a lack of strategic intelligence, execution capacity, and operational alignment. Metallic.V1 addresses this challenge by providing an integrated cognition architecture capable of analyzing objectives, identifying leverage points, designing execution frameworks, deploying specialized intelligence agents, and monitoring results across the entire operational lifecycle.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="page-section" style={{ paddingTop: '60px', paddingBottom: '60px' }}>
+              <div className="shell">
+                <h3 style={{ fontSize: '24px', marginTop: '0', marginBottom: '40px', color: 'var(--text)' }}>The Five-Layer Cognition Stack</h3>
+                <div style={{ width: '100%', borderRadius: 'var(--r-xl)', overflow: 'hidden', boxShadow: '0 20px 60px rgba(0,0,0,0.5)' }}>
+                  <img src="assets/mvi-blueprint.png" alt="MV1 Blueprint" style={{ width: '100%', height: 'auto', display: 'block' }} />
+                </div>
+              </div>
+            </section>
+
+            <section style={{ paddingTop: '60px', paddingBottom: '60px', background: 'linear-gradient(180deg, rgba(16,185,129,0.05) 0%, transparent 100%)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+              <div className="shell">
+                <div className="text-content" style={{ fontSize: '17px', lineHeight: '1.9', maxWidth: '900px' }}>
+                  <h3 style={{ fontSize: '24px', marginTop: '0' }}>Built for the Enterprise</h3>
+                  <p>
+                    Metallic.V1 is purpose-built for organizations that demand more than automation. It is designed for founders scaling companies, operators managing complex systems, agencies delivering client outcomes, and enterprises seeking intelligent infrastructure capable of adapting to rapidly changing environments.
+                  </p>
+                  <h3>Our Mission</h3>
+                  <p style={{ marginBottom: '28px' }}>
+                    The mission of Metallic.V1 is to establish a new category of software: <strong style={{ color: 'var(--em-bright)' }}>Synthetic Executive Intelligence</strong>.
+                  </p>
+                  <p style={{ fontSize: '18px', fontWeight: '300', lineHeight: '1.8', color: 'var(--em-bright)', marginBottom: '0' }}>
+                    A system that does not merely assist with work—but actively thinks, plans, executes, and evolves alongside the organization it serves.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section className="page-section">
+              <div className="shell">
+                <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                  <p style={{ fontSize: '28px', fontWeight: '300', letterSpacing: '-0.02em', color: 'var(--text)', lineHeight: '1.4', marginBottom: '0' }}>
+                    <span style={{ color: 'var(--em-bright)' }}>Think.</span> <span style={{ color: 'var(--em-bright)' }}>Architect.</span> <span style={{ color: 'var(--em-bright)' }}>Execute.</span> <span style={{ color: 'var(--em-bright)' }}>Scale.</span>
+                  </p>
+                </div>
+              </div>
+            </section>
+          </>
+        }
+
+        {/* ── CONTACT ── */}
+        {activeSection === 'contact' &&
+        <section className="page-section">
+            <div className="shell" style={{ maxWidth: '600px' }}>
+              <div className="section-label">GET IN TOUCH</div>
+              <h2 className="section-title">Contact Us</h2>
+              <form onSubmit={(e) => {
+              e.preventDefault();
+              alert('Thank you for your submission. We will be in touch shortly.');
+              e.target.reset();
+            }} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Full Name *</label>
+                  <input
+                  type="text"
+                  required
+                  placeholder="Your name"
+                  style={{
+                    padding: '12px 16px',
+                    background: 'var(--surface-2)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--r-md)',
+                    color: 'var(--text)',
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    transition: 'all 0.15s',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(52,211,153,0.45)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border)'} />
+                
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email *</label>
+                  <input
+                  type="email"
+                  required
+                  placeholder="your@email.com"
+                  style={{
+                    padding: '12px 16px',
+                    background: 'var(--surface-2)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--r-md)',
+                    color: 'var(--text)',
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    transition: 'all 0.15s',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(52,211,153,0.45)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border)'} />
+                
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Company</label>
+                  <input
+                  type="text"
+                  placeholder="Your company name"
+                  style={{
+                    padding: '12px 16px',
+                    background: 'var(--surface-2)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--r-md)',
+                    color: 'var(--text)',
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    transition: 'all 0.15s',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(52,211,153,0.45)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border)'} />
+                
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Interest *</label>
+                  <select
+                  required
+                  style={{
+                    padding: '12px 16px',
+                    background: 'var(--surface-2)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--r-md)',
+                    color: 'var(--text)',
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    transition: 'all 0.15s',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    cursor: 'pointer'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(52,211,153,0.45)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border)'}>
+                  
+                    <option value="">Select an option...</option>
+                    <option value="general">General Inquiry</option>
+                    <option value="enterprise">Enterprise Sales</option>
+                    <option value="partnership">Partnership</option>
+                    <option value="support">Technical Support</option>
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <label style={{ fontSize: '13px', fontWeight: '500', color: 'var(--text)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message *</label>
+                  <textarea
+                  required
+                  placeholder="Tell us more about your inquiry..."
+                  rows="6"
+                  style={{
+                    padding: '12px 16px',
+                    background: 'var(--surface-2)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--r-md)',
+                    color: 'var(--text)',
+                    fontFamily: 'inherit',
+                    fontSize: '14px',
+                    transition: 'all 0.15s',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                    resize: 'none',
+                    lineHeight: '1.6'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'rgba(52,211,153,0.45)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border)'}>
+                </textarea>
+                </div>
+
+                <button
+                type="submit"
+                style={{
+                  marginTop: '20px',
+                  padding: '14px 28px',
+                  background: 'linear-gradient(180deg, #0f9060 0%, #0a7048 100%)',
+                  border: '1px solid var(--em)',
+                  borderRadius: 'var(--r-md)',
+                  color: '#fff',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.05em',
+                  cursor: 'pointer',
+                  transition: 'all 0.15s',
+                  fontFamily: 'inherit'
+                }}
+                onMouseEnter={(e) => e.target.style.boxShadow = '0 6px 32px -4px rgba(16,185,129,0.7)'}
+                onMouseLeave={(e) => e.target.style.boxShadow = '0 4px 24px -6px rgba(16,185,129,0.5)'}>
+                
+                  Send Message
+                </button>
+
+                <p style={{ fontSize: '12px', color: 'var(--text-mute)', marginTop: '12px', marginBottom: '0' }}>
+                  We typically respond within 24 hours during business days.
+                </p>
+              </form>
+            </div>
+          </section>
+        }
+
+        {/* ── PRIVACY POLICY ── */}
+        {activeSection === 'privacy' &&
+        <section className="page-section">
+            <div className="shell">
+              <div className="section-label">LEGAL</div>
+              <h2 className="section-title">Privacy Policy</h2>
+              <div className="text-content" style={{ maxWidth: '900px' }}>
+                <p style={{ fontSize: '12px', color: 'var(--text-mute)', marginBottom: '40px' }}>
+                  Last Updated: June 2026 · Effective Date: June 1, 2026
+                </p>
+
+                <h3>1. Introduction</h3>
+                <p>
+                  Metallic.V1 ("Company," "we," "us," or "our") operates the Metallic.V1 platform and related services ("Service"). This Privacy Policy explains how we collect, use, disclose, and otherwise process your personal information in connection with our Service.
+                </p>
+                <p>
+                  By accessing or using Metallic.V1, you acknowledge that you have read, understood, and agree to be bound by this Privacy Policy. If you do not agree with our practices, please do not use our Service.
+                </p>
+
+                <h3>2. Information We Collect</h3>
+                <p>
+                  We collect information you provide directly:
+                </p>
+                <ul>
+                  <li><strong>Account Information:</strong> Name, email address, company name, phone number, and account credentials</li>
+                  <li><strong>Billing Information:</strong> Payment method, billing address, and transaction history</li>
+                  <li><strong>Communications:</strong> Messages, support requests, and feedback you send us</li>
+                  <li><strong>API Keys and Credentials:</strong> Third-party API keys and credentials you provide for integrations</li>
+                </ul>
+                <p>
+                  We collect information automatically:
+                </p>
+                <ul>
+                  <li>Log data (IP address, browser type, pages visited, timestamps)</li>
+                  <li>Device information (hardware model, operating system, unique device identifiers)</li>
+                  <li>Usage data (features accessed, workflows executed, performance metrics)</li>
+                  <li>Cookies and similar tracking technologies</li>
+                </ul>
+
+                <h3>3. How We Use Your Information</h3>
+                <p>
+                  We use the information we collect to:
+                </p>
+                <ul>
+                  <li>Provide, maintain, and improve the Service</li>
+                  <li>Create and manage your account</li>
+                  <li>Process transactions and send related information</li>
+                  <li>Send administrative and service-related announcements</li>
+                  <li>Respond to your inquiries and support requests</li>
+                  <li>Monitor and analyze usage patterns and trends</li>
+                  <li>Detect, prevent, and address fraud and security issues</li>
+                  <li>Comply with legal obligations</li>
+                  <li>Personalize and improve user experience</li>
+                </ul>
+
+                <h3>4. Data Security</h3>
+                <p>
+                  We implement industry-standard security measures to protect your personal information from unauthorized access, alteration, disclosure, and destruction, including:
+                </p>
+                <ul>
+                  <li>Encryption of data in transit (TLS/SSL) and at rest (AES-256)</li>
+                  <li>Secure authentication protocols and multi-factor authentication options</li>
+                  <li>Regular security audits and penetration testing</li>
+                  <li>Access controls and role-based permissions</li>
+                  <li>Comprehensive audit logging and monitoring</li>
+                </ul>
+                <p>
+                  However, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security.
+                </p>
+
+                <h3>5. Data Retention</h3>
+                <p>
+                  We retain personal information for as long as necessary to provide the Service and fulfill the purposes outlined in this Privacy Policy. You may request deletion of your account and associated data at any time, subject to our legal and contractual obligations.
+                </p>
+
+                <h3>6. Third-Party Services and Data Sharing</h3>
+                <p>
+                  We do not sell or share your personal information with third parties for their marketing purposes. We may share information with:
+                </p>
+                <ul>
+                  <li><strong>Service Providers:</strong> Third parties who assist us in operating the Service (hosting, analytics, payment processing) under confidentiality agreements</li>
+                  <li><strong>Legal Requirements:</strong> Law enforcement, government agencies, or other parties when required by law or court order</li>
+                  <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+                  <li><strong>Your Consent:</strong> With your explicit consent for other purposes</li>
+                </ul>
+                <p>
+                  We require all third-party service providers to maintain the same level of data protection and confidentiality as we do.
+                </p>
+
+                <h3>7. Your Rights and Choices</h3>
+                <p>
+                  Depending on your location, you may have the following rights:
+                </p>
+                <ul>
+                  <li><strong>Access:</strong> Request a copy of your personal information</li>
+                  <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+                  <li><strong>Deletion:</strong> Request deletion of your personal information</li>
+                  <li><strong>Portability:</strong> Receive your data in a structured, portable format</li>
+                  <li><strong>Opt-Out:</strong> Opt out of marketing communications and certain data processing</li>
+                </ul>
+                <p>
+                  To exercise these rights, contact us at privacy@metallic.v1
+                </p>
+
+                <h3>8. Cookies and Tracking Technologies</h3>
+                <p>
+                  We use cookies and similar technologies to enhance your experience, remember preferences, and analyze usage. You can control cookie preferences through your browser settings. Disabling cookies may affect Service functionality.
+                </p>
+
+                <h3>9. Children's Privacy</h3>
+                <p>
+                  Our Service is not intended for individuals under 18 years of age. We do not knowingly collect personal information from children. If we become aware that we have collected information from a child, we will delete it promptly.
+                </p>
+
+                <h3>10. International Data Transfers</h3>
+                <p>
+                  Your information may be transferred to, stored in, and processed in countries other than your country of residence. These countries may have data protection laws that differ from your home country. By using the Service, you consent to such transfers.
+                </p>
+
+                <h3>11. Changes to This Policy</h3>
+                <p>
+                  We may update this Privacy Policy periodically. Material changes will be notified via email or prominent notice on the Service. Your continued use of the Service following such notification constitutes acceptance of the updated policy.
+                </p>
+
+                <h3>12. Contact Us</h3>
+                <p>
+                  If you have questions about this Privacy Policy or our privacy practices, contact us at privacy@metallic.v1
+                </p>
+              </div>
+            </div>
+          </section>
+        }
+
+        {/* ── TERMS OF SERVICE ── */}
+        {activeSection === 'terms' &&
+        <section className="page-section">
+            <div className="shell">
+              <div className="section-label">LEGAL</div>
+              <h2 className="section-title">Terms of Service</h2>
+              <div className="text-content" style={{ maxWidth: '900px' }}>
+                <p style={{ fontSize: '12px', color: 'var(--text-mute)', marginBottom: '40px' }}>
+                  Last Updated: June 2026 · Effective Date: June 1, 2026
+                </p>
+
+                <h3>1. Acceptance of Terms</h3>
+                <p>
+                  By accessing and using Metallic.V1 ("Service"), you accept and agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree to abide by the above, please do not use this service.
+                </p>
+
+                <h3>2. Use License</h3>
+                <p>
+                  Permission is granted to access and use the Service for lawful purposes only, subject to these terms. You may not, without our prior written consent:
+                </p>
+                <ul>
+                  <li>Reproduce, duplicate, copy, or sell any portion of the Service or its content</li>
+                  <li>Modify, reverse engineer, decompile, or attempt to derive the source code of any software contained in the Service</li>
+                  <li>Remove any copyright, trademark, or proprietary notices from the Service or its content</li>
+                  <li>Use the Service for any commercial purpose or for any public display without authorization</li>
+                  <li>Transfer, resell, or sublicense the Service to any third party</li>
+                  <li>Interfere with or disrupt the functionality, security, or integrity of the Service</li>
+                  <li>Attempt to gain unauthorized access to any portion of the Service</li>
+                </ul>
+
+                <h3>3. User Accounts and Credentials</h3>
+                <p>
+                  You are responsible for maintaining the confidentiality of your account credentials and password. You agree to accept responsibility for all activities that occur under your account. You must notify us immediately of any unauthorized use of your account.
+                </p>
+
+                <h3>4. Intellectual Property Rights</h3>
+                <p>
+                  All content, features, and functionality of the Service (including but not limited to text, graphics, logos, images, audio, video, and software) are owned by Metallic.V1 Systems, its licensors, or other providers and are protected by copyright, trademark, and other intellectual property laws.
+                </p>
+                <p>
+                  You retain all rights to any content you create or input into the Service. However, by uploading content, you grant Metallic.V1 a worldwide, non-exclusive, royalty-free license to use, reproduce, modify, and distribute such content for the purpose of providing the Service.
+                </p>
+
+                <h3>5. Limitation of Liability</h3>
+                <p>
+                  IN NO EVENT SHALL METALLIC.V1 SYSTEMS, ITS OFFICERS, DIRECTORS, EMPLOYEES, OR AGENTS BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF OR INABILITY TO USE THE SERVICE, INCLUDING BUT NOT LIMITED TO DAMAGES FOR LOSS OF PROFITS, DATA, OR BUSINESS INTERRUPTION.
+                </p>
+                <p>
+                  TO THE MAXIMUM EXTENT PERMITTED BY LAW, METALLIC.V1'S TOTAL LIABILITY TO YOU FOR ANY CLAIM ARISING FROM OR RELATING TO THIS AGREEMENT SHALL NOT EXCEED THE AMOUNT YOU PAID TO METALLIC.V1 IN THE 12 MONTHS PRECEDING THE CLAIM.
+                </p>
+
+                <h3>6. Disclaimer of Warranties</h3>
+                <p>
+                  THE SERVICE IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS. METALLIC.V1 MAKES NO WARRANTIES, EXPRESSED OR IMPLIED, REGARDING THE SERVICE, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT OF INTELLECTUAL PROPERTY RIGHTS.
+                </p>
+                <p>
+                  METALLIC.V1 DOES NOT WARRANT THAT:
+                </p>
+                <ul>
+                  <li>The Service will be uninterrupted, timely, or error-free</li>
+                  <li>The Service will meet your specific requirements or expectations</li>
+                  <li>Any defects or errors will be corrected</li>
+                  <li>The Service is free of viruses, malware, or other harmful code</li>
+                </ul>
+
+                <h3>7. Acceptable Use Policy</h3>
+                <p>
+                  You agree not to use the Service for any unlawful purposes or in any manner that could damage, disable, or impair the Service. Prohibited uses include:
+                </p>
+                <ul>
+                  <li>Illegal activities or activities that violate applicable laws</li>
+                  <li>Harassment, abuse, or threatening behavior toward other users or employees</li>
+                  <li>Transmission of malware, viruses, or malicious code</li>
+                  <li>Phishing, social engineering, or attempts to deceive others</li>
+                  <li>Unauthorized access to systems or networks</li>
+                  <li>Spamming or unsolicited commercial messages</li>
+                  <li>Violation of intellectual property rights of third parties</li>
+                  <li>Use of the Service in violation of these terms or any applicable laws</li>
+                </ul>
+
+                <h3>8. Indemnification</h3>
+                <p>
+                  You agree to indemnify, defend, and hold harmless Metallic.V1 Systems, its officers, directors, employees, and agents from any and all claims, damages, losses, liabilities, and expenses (including attorney fees) arising from:
+                </p>
+                <ul>
+                  <li>Your violation of these Terms of Service</li>
+                  <li>Your use of the Service in violation of applicable laws</li>
+                  <li>Your violation of third-party rights</li>
+                  <li>Content you upload or transmit through the Service</li>
+                </ul>
+
+                <h3>9. Termination</h3>
+                <p>
+                  We may terminate or suspend your account and access to the Service at any time, with or without cause, and without notice or liability. Grounds for termination include, but are not limited to:
+                </p>
+                <ul>
+                  <li>Violation of these Terms of Service</li>
+                  <li>Illegal activity or suspected illegal activity</li>
+                  <li>Breach of payment obligations</li>
+                  <li>Harassment of staff or other users</li>
+                  <li>Excessive resource consumption affecting service quality</li>
+                </ul>
+
+                <h3>10. Data and Backup Responsibility</h3>
+                <p>
+                  You are solely responsible for maintaining backups of any data, workflows, or content you create or store in the Service. While we employ reasonable security measures, Metallic.V1 assumes no responsibility for loss or corruption of data. We recommend regular backups and exports of critical information.
+                </p>
+
+                <h3>11. Service Availability and Maintenance</h3>
+                <p>
+                  We strive to maintain 99.9% uptime as outlined in our SLA, but we do not guarantee uninterrupted service. We may perform maintenance, updates, or repairs that could result in temporary service interruptions. We will make reasonable efforts to provide notice of planned maintenance.
+                </p>
+
+                <h3>12. Third-Party Links and Services</h3>
+                <p>
+                  The Service may contain links to third-party websites and services. We are not responsible for the content, accuracy, or practices of third-party services. Your use of third-party services is governed by their terms and privacy policies.
+                </p>
+
+                <h3>13. Payment Terms</h3>
+                <p>
+                  All fees are exclusive of applicable taxes. You are responsible for all sales, use, and other taxes. Failure to pay charges may result in suspension or termination of your account. We reserve the right to change pricing with 30 days' written notice.
+                </p>
+
+                <h3>14. Governing Law and Dispute Resolution</h3>
+                <p>
+                  These Terms of Service are governed by and construed in accordance with applicable law, without regard to conflict of law principles. Any disputes arising from these terms shall be resolved through binding arbitration or litigation as determined by the parties.
+
+                <h3>15. Entire Agreement and Modifications</h3>
+                <p>
+                  These Terms of Service, together with our Privacy Policy, constitute the entire agreement between you and Metallic.V1 regarding the Service. We reserve the right to modify these terms at any time. Your continued use of the Service following notification of changes constitutes acceptance of the updated terms.
+                </p>
+
+                <h3>16. Severability</h3>
+                <p>
+                  If any provision of these Terms of Service is found to be invalid or unenforceable, that provision shall be modified to the minimum extent necessary to make it valid, or if such modification is not possible, the provision shall be severed, and the remaining provisions shall continue in full force and effect.
+                </p>
+
+                <h3>17. Contact Information</h3>
+                <p>
+                  If you have questions about these Terms of Service, please contact us at legal@metallic.v1
+                </p>
+                </p>
+              </div>
+            </div>
+          </section>
+        }
+
+        {/* ── FOOTER WITH LOGO ── */}
+        <footer style={{ borderTop: 'none', background: '#000', padding: '80px 0 40px' }}>
+          <div className="shell">
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '80px' }}>
+              <img src="assets/mv1-footer-logo.png" alt="Metallic V1" style={{ height: '550px', width: 'auto', objectFit: 'contain' }} />
+            </div>
+            <SiteFooter />
+          </div>
+        </footer>
+      </div>
+    </>);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<LandingPage />);
+</script>
+</body>
+</html>
