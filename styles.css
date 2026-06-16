@@ -728,11 +728,40 @@ section { position:relative; }
     max-width: 100%;
     padding-left: 16px;
     padding-right: 16px;
-    gap: 12px;
+    gap: 0;
+    justify-content: center;
   }
+  .brand { display: none !important; }
   .app-page { grid-template-columns:1fr; }
   .app-sidebar { display:none; }
-  .nav-links { display:none; }
+  .nav-links {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
+    gap: 2px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-links button,
+  .nav-links a {
+    flex: 0 0 auto;
+    min-height: 40px;
+    padding: 0 10px !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px !important;
+    border-radius: var(--r-sm) !important;
+  }
+  .brand img {
+    height: 28px !important;
+  }
   .nav-pill { display:none; }
   .modes-grid { grid-template-columns:1fr; }
   .kpi-grid { grid-template-columns:1fr 1fr; }
